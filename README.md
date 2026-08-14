@@ -1,0 +1,164 @@
+# JVS Import & Export — Corporate Website
+
+A production-ready, fully responsive corporate website for **JVS Import & Export**, an import-export trading and business consultancy firm. Built with hand-written **HTML5, CSS3, and vanilla JavaScript** — no frameworks, no build step required.
+
+---
+
+## 🚀 Getting Started
+
+This is a static website. No installation, build tools, or server required.
+
+1. Download / unzip the project.
+2. Open `index.html` directly in any modern browser, **or**
+3. For the best experience (and to avoid any browser file:// restrictions), serve it with a simple local server:
+
+   ```bash
+   # Python 3
+   python3 -m http.server 8000
+
+   # Node (if you have npx available)
+   npx serve .
+   ```
+4. Visit `http://localhost:8000`.
+
+To deploy, upload the entire project folder to any static host (Netlify, Vercel, GitHub Pages, cPanel, S3, etc.) — there is nothing to build or compile.
+
+---
+
+## 📁 Project Structure
+
+```
+JVS-IMPORT-EXPORT/
+│
+├── index.html            Homepage
+├── about.html             About / company story page
+├── products.html          Product catalog page
+├── certificate.html       Certificates & accreditations gallery
+├── contact.html           Contact page with form, FAQ, map
+│
+├── css/
+│   └── style.css          Single, organized stylesheet (design tokens + components)
+│
+├── js/
+│   └── script.js          Single, modular vanilla JS file (all interactivity)
+│
+├── assets/
+│   ├── images/
+│   │   └── logo.png       Company logo (from uploaded brand asset)
+│   ├── icons/              (reserved for future custom icon assets)
+│   └── certificates/       (reserved for real certificate scans/PDFs)
+│
+└── README.md
+```
+
+---
+
+## 🎨 Design System
+
+The visual design follows the UI reference you provided (Stitch export) and its accompanying design spec:
+
+| Token | Value |
+|---|---|
+| Primary (Navy) | `#002741` |
+| Gold Accent | `#D4AF37` |
+| Background | `#F8F9FA` / `#F8F9FF` |
+| Headings | Manrope (600–800) |
+| Body Text | Inter (400–600) |
+| Card Radius | 24px |
+| Button Radius | 16px |
+| Section Spacing | 120px desktop / 64px mobile |
+
+All values live as CSS custom properties at the top of `css/style.css`, so the entire palette, spacing, and typography scale can be adjusted from one place.
+
+---
+
+## ✅ What's Implemented
+
+**Pages:** Home, Products, About, Certificates, Contact — all interlinked via a consistent header and footer.
+
+**Home page sections:** Hero (with animated shapes, scroll indicator), Mission & Vision, "JVS Advantage" flow diagram, Services grid, Business Process timeline, Industries We Serve, animated Statistics counters, Testimonials slider, Featured Products, final CTA banner.
+
+**Products page:** Live client-side search, category filter chips, product cards with specs, a "Load More" simulated pagination action, and a bento-style partnership panel.
+
+**About page:** Company story, mission/vision recap, core values, director's message, company timeline, business philosophy, global network chips.
+
+**Certificates page:** Responsive certificate grid with a fully accessible, keyboard-navigable lightbox (arrow keys, Escape to close), plus a "coming soon" placeholder tile for future certificates.
+
+**Contact page:** Validated contact form (client-side only — see "Connecting the Form" below), WhatsApp button, social links, office details, map placeholder, global connectivity showcase with animated stats, and an accordion FAQ.
+
+**Site-wide:**
+- Sticky header that shrinks and gains a shadow on scroll
+- Fully accessible responsive hamburger menu (keyboard + `Esc` support)
+- Scroll-reveal animations via `IntersectionObserver`
+- Animated counters, button ripple effect, back-to-top button
+- Loading animation on page entry
+- Skip-to-content link, visible focus states, semantic landmarks, ARIA labels throughout
+- SEO meta tags (title, description, Open Graph, canonical URLs) and `Organization` schema markup on the homepage
+
+---
+
+## 🔌 Connecting the Contact Form
+
+The contact form in `contact.html` currently performs **client-side validation and a simulated submission** (see `initContactForm()` in `js/script.js`) so the UI/UX can be evaluated immediately. To make it fully functional, choose one of:
+
+1. **Form backend service** (fastest): Point the `<form>` at a service like Formspree, Getform, or Basin, and remove the `e.preventDefault()` block in `initContactForm()` (or adapt it to `fetch()` the service's endpoint).
+2. **Your own backend**: Replace the `setTimeout` simulation in `initContactForm()` with a `fetch()` call to your API endpoint, and handle the JSON response to show success/error state.
+3. **Serverless function**: Deploy a small function (Netlify/Vercel/AWS Lambda) that emails the submission or writes it to your CRM, then call it the same way.
+
+---
+
+## 🖼️ About the Placeholder Images
+
+The product, hero, and certificate photography currently reference the temporary preview image URLs generated by the design tool during your UI export (`lh3.googleusercontent.com`). These reproduce your approved design exactly, but **are not guaranteed to remain online indefinitely** and are not optimized for production performance.
+
+**Before launch:**
+1. Replace each `<img>` `src` in the HTML files with your own product photography, hosted in `assets/images/`.
+2. Export images as compressed WebP/JPEG at the displayed size (or 2x for retina) to keep load times fast.
+3. Update the `alt` text if the new photography differs from the current description.
+4. Add real certificate scans (PDF or high-res image) to `assets/certificates/` and link them from `certificate.html`.
+
+The company logo (`assets/images/logo.png`) is already a permanent local asset taken from your uploaded brand file.
+
+---
+
+## ♿ Accessibility Notes
+
+- Semantic landmarks (`header`, `main`, `nav`, `footer`) on every page.
+- Skip-to-content link at the top of every page for keyboard users.
+- All interactive icons include `aria-label`s; decorative icons are `aria-hidden`.
+- Visible focus rings on all interactive elements (`:focus-visible`).
+- Form fields are properly labeled with live-region error messaging.
+- Color contrast follows WCAG AA guidance against the navy/gold/off-white palette.
+- Respects `prefers-reduced-motion` — animations are disabled for users who request it.
+
+---
+
+## 📱 Responsive Breakpoints
+
+Tested and tuned at: **320px, 480px, 768px, 1024px, 1440px, 1920px.**
+
+---
+
+## 🛠 Tech Stack
+
+- HTML5 (semantic, SEO-ready)
+- CSS3 (custom properties, Grid, Flexbox — no preprocessor required)
+- Vanilla JavaScript (ES6+, no dependencies)
+- Google Fonts: Manrope & Inter
+
+No Bootstrap, Tailwind, React, Vue, Angular, or jQuery is used anywhere in this project, per your requirements.
+
+---
+
+## 📝 Content To Personalize
+
+A few values were used as realistic placeholders during build — update these before launch:
+
+- Phone numbers, email addresses, and the physical office address on the Contact page and footer.
+- Social media links (`href="#"`) — point them at your real profiles.
+- Certificate images/titles on `certificate.html` — replace with your real accreditation documents.
+- Testimonials on the homepage — replace with real client quotes once available (or keep as illustrative placeholders, clearly marked as such internally).
+
+---
+
+Built for **JVS Import & Export** — *Connecting Markets, Delivering Value.*
