@@ -409,74 +409,185 @@ function initProductCatalog() {
    Contact Form: Client-side Validation + Simulated Submission
    ------------------------------------------------------------------------- */
 function initContactForm() {
+
   const form = document.querySelector('[data-contact-form]');
+
   if (!form) return;
 
   const statusEl = form.querySelector('[data-form-status]');
   const submitBtn = form.querySelector('[data-form-submit]');
 
   const validators = {
-    name: (v) => v.trim().length > 1 || 'Please enter your full name.',
-    email: (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) || 'Please enter a valid email address.',
-    message: (v) => v.trim().length > 9 || 'Please add a few details about your requirement.',
+
+    name: (v) =>
+      v.trim().length > 1 ||
+      'Please enter your full name.',
+
+    email: (v) =>
+      /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) ||
+      'Please enter a valid email address.',
+
+    message: (v) =>
+      v.trim().length > 9 ||
+      'Please add a few details about your requirement.',
+
   };
 
   const showFieldError = (field, message) => {
+
     const wrapper = field.closest('.form-field');
+
     if (!wrapper) return;
+
     wrapper.classList.toggle('has-error', Boolean(message));
+
     const errorEl = wrapper.querySelector('.error-msg');
-    if (errorEl) errorEl.textContent = message === true ? '' : message || '';
+
+    if (errorEl) {
+      errorEl.textContent =
+        message === true ? '' : message || '';
+    }
+
   };
 
   const validateField = (field) => {
+
     const rule = validators[field.name];
+
     if (!rule) return true;
+
     const result = rule(field.value);
-    showFieldError(field, result === true ? '' : result);
+
+    showFieldError(
+      field,
+      result === true ? '' : result
+    );
+
     return result === true;
+
   };
 
   Object.keys(validators).forEach((name) => {
+
     const field = form.elements[name];
+
     if (field) {
-      field.addEventListener('blur', () => validateField(field));
+
+      field.addEventListener('blur', () => {
+        validateField(field);
+      });
+
     }
+
   });
 
-  form.addEventListener('submit', (e) => {
+  form.addEventListener('submit', async (e) => {
+
     e.preventDefault();
 
     let isValid = true;
+
     Object.keys(validators).forEach((name) => {
+
       const field = form.elements[name];
-      if (field && !validateField(field)) isValid = false;
+
+      if (field && !validateField(field)) {
+        isValid = false;
+      }
+
     });
 
     if (!isValid) {
+
       if (statusEl) {
-        statusEl.textContent = 'Please correct the highlighted fields.';
+
+        statusEl.textContent =
+          'Please correct the highlighted fields.';
+
         statusEl.classList.remove('is-success');
+
       }
+
       return;
+
     }
 
     const originalContent = submitBtn.innerHTML;
-    submitBtn.disabled = true;
-    submitBtn.innerHTML = '<span>Sending Inquiry...</span>';
 
-    // Simulated submission — connect to a real endpoint / email service
-    // (e.g. Formspree, a serverless function, or your CRM's API) here.
-    setTimeout(() => {
-      if (statusEl) {
-        statusEl.textContent = 'Thank you — your inquiry has been received. Our team will respond within 2 business hours.';
-        statusEl.classList.add('is-success');
+    submitBtn.disabled = true;
+
+    submitBtn.innerHTML =
+      '<span>Sending Inquiry...</span>';
+
+    if (statusEl) {
+
+      statusEl.textContent = '';
+
+      statusEl.classList.remove('is-success');
+
+    }
+
+    try {
+
+      const formData = new FormData(form);
+
+      const response = await fetch(
+        'https://api.web3forms.com/submit',
+        {
+          method: 'POST',
+          body: formData
+        }
+      );
+
+      const result = await response.json();
+
+      if (response.ok && result.success) {
+
+        if (statusEl) {
+
+          statusEl.textContent =
+            'Thank you — your inquiry has been received. Our team will respond within 2 business hours.';
+
+          statusEl.classList.add('is-success');
+
+        }
+
+        form.reset();
+
+      } else {
+
+        throw new Error(
+          result.message || 'Submission failed.'
+        );
+
       }
-      form.reset();
+
+    } catch (error) {
+
+      console.error(
+        'Inquiry submission error:',
+        error
+      );
+
+      if (statusEl) {
+
+        statusEl.textContent =
+          'Sorry, we could not send your inquiry. Please try again or contact us directly.';
+
+        statusEl.classList.remove('is-success');
+
+      }
+
+    } finally {
+
       submitBtn.disabled = false;
+
       submitBtn.innerHTML = originalContent;
-    }, 1400);
+
+    }
+
   });
+
 }
 
 /* -------------------------------------------------------------------------
